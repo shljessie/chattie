@@ -1,29 +1,29 @@
+// App.js
+
 import './App.css';
 
-import React, { useEffect, useState } from 'react';
-
-import CsvLoader from './components/CSVLoader';
-import logo from './logo.svg';
+import ChatContainer from './components/ChatContainer';
+import LeftPanel from './components/LeftPanel';
+import NavBar from './components/NavBar';
+import React from 'react';
 
 function App() {
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/')
-      .then((response) => response.json())
-      .then((data) => setData(data))
-      .catch((error) => console.error('Error fetching data:', error));
-  }, []);
-
   return (
     <div className="App">
-      <header className="App-header">
-      </header>
-      <body>
-      <CsvLoader />
-      {data}
-      </body>
+      <NavBar />
+      <div className="main-content">
+        <LeftPanel />
+        <div className="chat-wrapper">
+          <div className="chat-section">
+            <p>Conversation 1</p>
+            <ChatContainer fetchUrl="http://localhost:3001" />
+          </div>
+          <div className="chat-section">
+            <p>Conversation 2</p>
+            <ChatContainer fetchUrl="http://localhost:3001" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

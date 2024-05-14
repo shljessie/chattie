@@ -7,6 +7,19 @@ const port = 3001;
 
 app.use(cors());
 
+// sets
+// https://chattiedata.s3.amazonaws.com/chat_profile_probe_base_20_1.csv
+// https://chattiedata.s3.amazonaws.com/chat_profile_probe_finetune_20_1.csv
+
+// https://chattiedata.s3.amazonaws.com/chat_profile_probe_base_20_2.csv
+// https://chattiedata.s3.amazonaws.com/chat_profile_probe_finetune_20_2.csv
+
+// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_base_20_1.csv
+// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_finetune_20_1.csv
+
+// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_base_20_2.csv
+// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_finetune_20_2.csv
+
 app.get('/', async (req, res) => {
   try {
     console.log('Received request at /');

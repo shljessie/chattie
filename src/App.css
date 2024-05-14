@@ -118,7 +118,7 @@
 }
 
 .bot1-bubble {
-  background-color:  #333333; /* Blue bubble */
+  background-color:  #333333;
   color: white;
   align-self: flex-start;
   margin-right: auto;
@@ -127,10 +127,44 @@
 }
 
 .bot2-bubble {
-  background-color: #E8E8E8; /* Light gray bubble */
+  background-color: #E8E8E8;
   color: black;
   align-self: flex-end;
   margin-left: auto;
   text-align: right;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
+
+.left-panel {
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  height: 100vh;
+  background-color: #f9f9f9;
+  text-align: start;
+}
+
+.left-panel h2 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+
+.radio-group {
+  margin-bottom: 20px;
+}
+
+.radio-group p {
+  margin: 5px 0;
+  font-weight: bold;
+}
+
+.radio-group label {
+  display: block;
+  margin: 5px 0;
+}
+
+.question-label {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  display: block;
+}
+

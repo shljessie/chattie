@@ -7,23 +7,21 @@ const port = 3001;
 
 app.use(cors());
 
-// sets
-// https://chattiedata.s3.amazonaws.com/chat_profile_probe_base_20_1.csv
-// https://chattiedata.s3.amazonaws.com/chat_profile_probe_finetune_20_1.csv
+const baseUrl = 'https://chattiedata.s3.amazonaws.com';
 
-// https://chattiedata.s3.amazonaws.com/chat_profile_probe_base_20_2.csv
-// https://chattiedata.s3.amazonaws.com/chat_profile_probe_finetune_20_2.csv
+app.get('/load-csv', async (req, res) => {
+  const { type, stage, num } = req.query;
 
-// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_base_20_1.csv
-// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_finetune_20_1.csv
+  if (!type || !stage || !num) {
+    return res.status(400).send('Missing query parameters. Please provide type, stage, and num.');
+  }
 
-// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_base_20_2.csv
-// https://chattiedata.s3.amazonaws.com/chat_knowledge_probe_finetune_20_2.csv
+  const fileName = `chat_${type}_probe_${stage}_20_${num}.csv`;
+  const fileUrl = `${baseUrl}/${fileName}`;
 
-app.get('/', async (req, res) => {
   try {
-    console.log('Received request at /');
-    const response = await axios.get('https://chattiedata.s3.amazonaws.com/chat_profile_probe_base_20_1.csv', {
+    console.log(`Received request for ${fileName}`);
+    const response = await axios.get(fileUrl, {
       responseType: 'stream'
     });
 

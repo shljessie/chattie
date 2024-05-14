@@ -16,17 +16,13 @@ function RadioGroup({ question, name, label }) {
     </div>
   );
 }
-// highlight 10, 15, 18 or sth 
-function LeftPanel() {
+
+function LeftPanel({ onNext, onPrevious, isComplete, section }) {
   return (
     <div className="left-panel">
-      <h2>Section 1</h2>
-
+      <h2>Section {section}</h2>
       <h4>Persona:</h4>
-
       <h4>Probe Questions:</h4>
-      
-
       <form>
         <RadioGroup 
           question="In which conversation is Bot1 more consistent?" 
@@ -44,8 +40,8 @@ function LeftPanel() {
           label="Question 3"
         />
       </form>
-
-      <button>Next</button>
+      {section > 1 && <button onClick={onPrevious}>Previous</button>}
+      <button onClick={onNext}>{section === 4 ? 'Complete Survey' : 'Next'}</button>
     </div>
   );
 }

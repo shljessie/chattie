@@ -118,8 +118,8 @@
 }
 
 .bot1-bubble {
-  background-color:  #333333;
-  color: white;
+  background-color:  #7CB9E8;
+  color: black;
   align-self: flex-start;
   margin-right: auto;
   text-align: left;
@@ -168,3 +168,11 @@
   display: block;
 }
 
+
+
+.chat-bubble a {
+  background-color: lightyellow;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}

@@ -11,18 +11,24 @@ function App() {
   const [num, setNum] = useState(1);
   const [section, setSection] = useState(1);
   const [isComplete, setIsComplete] = useState(false);
+  const [formData, setFormData] = useState([
+    { consistency: '', naturalness: '', engagement: '' },
+    { consistency: '', naturalness: '', engagement: '' },
+    { consistency: '', naturalness: '', engagement: '' },
+    { consistency: '', naturalness: '', engagement: '' },
+  ]);
 
   const handleNext = () => {
     if (type === 'profile' && num === 2) {
       setType('knowledge');
       setNum(1);
-      setSection(prevSection => Math.min(prevSection + 1, 4));
+      setSection((prevSection) => Math.min(prevSection + 1, 4));
     } else if (type === 'knowledge' && num === 2) {
       setIsComplete(true);
-      setSection(prevSection => Math.min(prevSection + 1, 4));
+      setSection((prevSection) => Math.min(prevSection + 1, 4));
     } else {
-      setNum(prevNum => prevNum + 1);
-      setSection(prevSection => Math.min(prevSection + 1, 4));
+      setNum((prevNum) => prevNum + 1);
+      setSection((prevSection) => Math.min(prevSection + 1, 4));
     }
   };
 
@@ -31,22 +37,37 @@ function App() {
       setIsComplete(false);
       setNum(2);
       setType('knowledge');
-      setSection(prevSection => Math.max(prevSection - 1, 1));
+      setSection((prevSection) => Math.max(prevSection - 1, 1));
     } else if (type === 'knowledge' && num === 1) {
       setType('profile');
       setNum(2);
-      setSection(prevSection => Math.max(prevSection - 1, 1));
+      setSection((prevSection) => Math.max(prevSection - 1, 1));
     } else {
-      setNum(prevNum => prevNum - 1);
-      setSection(prevSection => Math.max(prevSection - 1, 1));
+      setNum((prevNum) => prevNum - 1);
+      setSection((prevSection) => Math.max(prevSection - 1, 1));
     }
+  };
+
+  const updateFormData = (newData) => {
+    setFormData((prevFormData) => {
+      const updatedFormData = [...prevFormData];
+      updatedFormData[section - 1] = newData;
+      return updatedFormData;
+    });
   };
 
   return (
     <div className="App">
       <NavBar />
       <div className="main-content">
-        <LeftPanel onNext={handleNext} onPrevious={handlePrevious} isComplete={isComplete} section={section} />
+        <LeftPanel
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+          isComplete={isComplete}
+          section={section}
+          formData={formData[section - 1]}
+          updateFormData={updateFormData}
+        />
         <div className="chat-wrapper">
           <div className="chat-section">
             <p>Conversation 1</p>

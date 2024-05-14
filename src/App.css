@@ -48,8 +48,8 @@
 
 /* Navbar Styles */
 .navbar {
-  background-color: gray;
-  color: white;
+  background-color: #333333; /* Lighter black */
+  color: #e0e0e0; /* Darker white */
   padding: 0.8rem;
   text-align: center;
 }
@@ -118,7 +118,7 @@
 }
 
 .bot1-bubble {
-  background-color: #4682B4; /* Blue bubble */
+  background-color:  #333333; /* Blue bubble */
   color: white;
   align-self: flex-start;
   margin-right: auto;

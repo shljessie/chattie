@@ -18,6 +18,9 @@ function App() {
     { consistency: '', naturalness: '', engagement: '' },
   ]);
 
+  // Replace with UUID
+  const prolificId = "Prolific ID: 123456";
+
   const handleNext = () => {
     if (type === 'profile' && num === 2) {
       setType('knowledge');
@@ -58,7 +61,7 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar />
+      <NavBar  prolificId={prolificId} />
       <div className="main-content">
         <LeftPanel
           onNext={handleNext}
@@ -71,11 +74,11 @@ function App() {
         <div className="chat-wrapper">
           <div className="chat-section">
             <p>Conversation 1</p>
-            <ChatContainer fetchUrl={`http://localhost:3001/load-csv?type=${type}&stage=base&num=${num}`} />
+            <ChatContainer containerId="conversation1"  fetchUrl={`http://localhost:3001/load-csv?type=${type}&stage=base&num=${num}`} />
           </div>
           <div className="chat-section">
             <p>Conversation 2</p>
-            <ChatContainer fetchUrl={`http://localhost:3001/load-csv?type=${type}&stage=finetune&num=${num}`} />
+            <ChatContainer containerId="conversation2" fetchUrl={`http://localhost:3001/load-csv?type=${type}&stage=finetune&num=${num}`} />
           </div>
         </div>
       </div>

@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import MediumEditor from 'medium-editor';
 import PropTypes from 'prop-types';
 
-const ChatBubble = ({ text, isBot1 }) => {
+const ChatBubble = ({ text, isBot1, index, botTitle, containerId }) => {
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -35,10 +35,9 @@ const ChatBubble = ({ text, isBot1 }) => {
     });
 
     const handleKeydown = (event) => {
-      // Prevent any keypress that would add new text
       const keysAllowed = [
-        'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Backspace', 'Delete', 
-        'Control', 'Meta', 'Shift', 'Alt', 'Escape', 'Tab', 'CapsLock', 
+        'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Backspace', 'Delete',
+        'Control', 'Meta', 'Shift', 'Alt', 'Escape', 'Tab', 'CapsLock',
         'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'
       ];
 
@@ -54,7 +53,6 @@ const ChatBubble = ({ text, isBot1 }) => {
       editorElement.addEventListener('keydown', handleKeydown);
     }
 
-    // Clean up on unmount
     return () => {
       if (editorElement) {
         editorElement.removeEventListener('keydown', handleKeydown);
@@ -63,9 +61,17 @@ const ChatBubble = ({ text, isBot1 }) => {
     };
   }, []);
 
+  const isPink = index === 10 || index === 13 || index === 16;
+  const chatTurnId = `${containerId}-chat-turn-${index + 1}`;
+
   return (
-    <div className={`chat-bubble ${isBot1 ? 'bot1-bubble' : 'bot2-bubble'}`}>
-      <div ref={editorRef} dangerouslySetInnerHTML={{ __html: text }} />
+    <div id={chatTurnId} className={`chat-bubble-container ${isBot1 ? 'bot1-container' : 'bot2-container'}`}>
+      <div className={`bubble-info ${isBot1 ? 'left' : 'right'}`}>
+        <span>{botTitle}, {index + 1}th turn</span>
+      </div>
+      <div className={`chat-bubble ${isBot1 ? 'bot1-bubble' : 'bot2-bubble'} ${isPink ? 'pink-bubble' : ''}`}>
+        <div ref={editorRef} dangerouslySetInnerHTML={{ __html: text }} />
+      </div>
     </div>
   );
 };
@@ -73,6 +79,9 @@ const ChatBubble = ({ text, isBot1 }) => {
 ChatBubble.propTypes = {
   text: PropTypes.string.isRequired,
   isBot1: PropTypes.bool.isRequired,
+  index: PropTypes.number.isRequired,
+  botTitle: PropTypes.string.isRequired,
+  containerId: PropTypes.string.isRequired,
 };
 
 export default ChatBubble;

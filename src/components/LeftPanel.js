@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 function RadioGroup({ question, name, label, value, onChange }) {
   return (
     <div className="radio-group">
-      <label className="question-label">{label}</label>
-      <p>{question}</p>
+      <p>{label} {question}</p>
       <label>
         <input 
           type="radio" 
@@ -29,6 +28,14 @@ function RadioGroup({ question, name, label, value, onChange }) {
   );
 }
 
+function TextareaGroup({ question, name, label, value, onChange }) {
+  return (
+    <div className="textarea-group" style={{display:'flex', flexDirection:'row'}}>
+      <p style={{fontWeight: 'bold'}} >{label} {question}</p>
+    </div>
+  );
+}
+
 function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFormData }) {
   const [localFormData, setLocalFormData] = useState(formData);
 
@@ -46,7 +53,7 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
 
   const handleNext = () => {
     updateFormData(localFormData);
-    setLocalFormData({ consistency: '', naturalness: '', engagement: '' });
+    setLocalFormData({ consistency: '', naturalness: '', engagement: '', probingQuestion1: '', probingQuestion2: '', probingQuestion3: '' });
     onNext();
   };
 
@@ -55,36 +62,119 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
     onPrevious();
   };
 
+  const isNextDisabled = !(
+    localFormData.consistency &&
+    localFormData.naturalness &&
+    localFormData.engagement &&
+    localFormData.probingQuestion1 &&
+    localFormData.probingQuestion2 &&
+    localFormData.probingQuestion3
+  );
+
   return (
     <div className="left-panel">
       <h2>Section {section}</h2>
       <h4>Persona:</h4>
       <h4>Probe Questions:</h4>
+      {isNextDisabled && (
+        <p style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
+          Please select all options before proceeding.
+        </p>
+      )}
       <form>
         <RadioGroup 
           question="In which conversation is Bot1 more consistent?" 
           name="consistency" 
-          label="Question 1" 
+          label="1)" 
           value={localFormData.consistency} 
           onChange={handleChange} 
         />
         <RadioGroup 
           question="In which conversation is Bot1 more natural?" 
           name="naturalness" 
-          label="Question 2" 
+          label="2)" 
           value={localFormData.naturalness} 
           onChange={handleChange} 
         />
         <RadioGroup 
           question="In which conversation is Bot1 more engaging?" 
           name="engagement" 
-          label="Question 3" 
+          label="3)" 
           value={localFormData.engagement} 
           onChange={handleChange} 
         />
+        <TextareaGroup 
+          question="Annotate parts of the conversation that you feel are natural or unnatural" 
+          name="unnaturalParts" 
+          label="4)" 
+          onChange={handleChange} 
+        />
+        <RadioGroup 
+          question="Which conversation answered the probing question better?" 
+          name="probingQuestion1" 
+          label="5)" 
+          value={localFormData.probingQuestion1} 
+          onChange={handleChange} 
+        />
+        <RadioGroup 
+          question="Which conversation answered the probing question better?" 
+          name="probingQuestion2" 
+          label="6)" 
+          value={localFormData.probingQuestion2} 
+          onChange={handleChange} 
+        />
+        <RadioGroup 
+          question="Which conversation answered the probing question better?" 
+          name="probingQuestion3" 
+          label="7)" 
+          value={localFormData.probingQuestion3} 
+          onChange={handleChange} 
+        />
       </form>
-      {section > 1 && <button onClick={handlePrevious}>Previous</button>}
-      <button onClick={handleNext}>{section === 4 ? 'Complete Survey' : 'Next'}</button>
+      {section > 1 && (
+        <button
+          style={{
+            backgroundColor: '#f44336', /* Red background */
+            border: 'none',             /* Remove borders */
+            color: 'white',             /* White text */
+            padding: '15px 32px',  
+            textAlign: 'center', 
+            fontWeight: '800',       
+            textDecoration: 'none',     /* Remove underline */
+            display: 'inline-block',    /* Make the button inline */
+            fontSize: '16px',           /* Increase font size */
+            margin: '4px 2px',          /* Some margin */
+            cursor: 'pointer',          /* Pointer/hand icon on hover */
+            borderRadius: '12px'        /* Rounded corners */
+          }}
+          onClick={handlePrevious}
+        >
+          Previous
+        </button>
+      )}
+      
+      <button
+        style={{
+          backgroundColor: '#4CAF50',
+          border: 'none',
+          color: 'white',
+          padding: '15px 32px',
+          textAlign: 'center',
+          fontWeight: '800',
+          textDecoration: 'none',
+          display: 'inline-block',
+          fontSize: '16px',
+          margin: '4px 2px',
+          cursor: 'pointer',
+          borderRadius: '12px'
+        }}
+        onClick={handleNext}
+        disabled={isNextDisabled}
+      >
+        {section === 4 ? 'Complete Survey' : 'Next'}
+      </button>
+
+
     </div>
   );
 }

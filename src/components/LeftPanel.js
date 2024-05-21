@@ -30,14 +30,24 @@ function RadioGroup({ question, name, label, value, onChange }) {
 
 function TextareaGroup({ question, name, label, value, onChange }) {
   return (
-    <div className="textarea-group" style={{display:'flex', flexDirection:'row'}}>
-      <p style={{fontWeight: 'bold'}} >{label} {question}</p>
+    <div className="textarea-group" style={{ display: 'flex', flexDirection: 'row' }}>
+      <p style={{ fontWeight: 'bold' }}>{label} {question}</p>
     </div>
   );
 }
 
 function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFormData }) {
   const [localFormData, setLocalFormData] = useState(formData);
+
+  const [persona, setPersona] =useState('');
+
+  useEffect(() => {
+    if (section === 1 || section === 2) {
+      setPersona('You are Emily, a 30-year-old financial analyst working at Quantum Bank');
+    } else {
+      setPersona('BannaLoft is a company that exclusively sells banana boats, no tours, no swimming suits. BannaLoft is only located in San Francisco');
+    }
+  }, [section]);
 
   useEffect(() => {
     setLocalFormData(formData);
@@ -74,8 +84,8 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
   return (
     <div className="left-panel">
       <h2>Section {section}</h2>
-      <h4>Persona:</h4>
-      <h4>Probe Questions:</h4>
+      Read through the conversations and evaluate
+      <h4>Persona: {persona}</h4>
       {isNextDisabled && (
         <p style={{ color: 'red', fontWeight: 'bold', marginTop: '10px' }}>
           Please select all options before proceeding.

@@ -73,6 +73,7 @@
   background-color: #f4f4f4;
   padding: 1rem;
   width: 20%;
+  font-size: 14px;
 }
 
 .left-panel h2 {
@@ -121,11 +122,11 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
-  max-width: 60%;
+  max-width: 50%;
 }
 
 .bubble-info {
-  font-size: 0.8em;
+  font-size: 0.6em;
   color: #888;
   margin-bottom: 5px;
 }

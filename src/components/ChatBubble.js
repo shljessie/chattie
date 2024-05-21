@@ -61,7 +61,7 @@ const ChatBubble = ({ text, isBot1, index, botTitle, containerId }) => {
     };
   }, []);
 
-  const isPink = index === 10 || index === 13 || index === 16;
+  const isPink = index === 11 || index === 14 || index === 17;
   const chatTurnId = `${containerId}-chat-turn-${index + 1}`;
 
   return (

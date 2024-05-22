@@ -1,10 +1,11 @@
 import './App.css';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import ChatContainer from './components/ChatContainer';
 import LeftPanel from './components/LeftPanel';
 import NavBar from './components/NavBar';
+import axios from 'axios';
 
 function App() {
   const [type, setType] = useState('profile');
@@ -18,8 +19,25 @@ function App() {
     { consistency: '', naturalness: '', engagement: '' },
   ]);
 
-  // Replace with UUID
+  const [data1, setData1] = useState(null);
+  const [data2, setData2] = useState(null);
+
   const prolificId = "Prolific ID: 123456";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response1 = await axios.get(`https://chattie-server-4b47d3d64614.herokuapp.com/load-csv?type=${type}&stage=base&num=${num}`);
+        setData1(response1.data);
+        const response2 = await axios.get(`https://chattie-server-4b47d3d64614.herokuapp.com/load-csv?type=${type}&stage=finetune&num=${num}`);
+        setData2(response2.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [type, num]);
 
   const handleNext = () => {
     if (type === 'profile' && num === 2) {
@@ -61,7 +79,7 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar  prolificId={prolificId} />
+      <NavBar prolificId={prolificId} />
       <div className="main-content">
         <LeftPanel
           onNext={handleNext}
@@ -74,11 +92,11 @@ function App() {
         <div className="chat-wrapper">
           <div className="chat-section">
             <p>Conversation 1</p>
-            <ChatContainer containerId="conversation1"  fetchUrl={`http://localhost:3001/load-csv?type=${type}&stage=base&num=${num}`} />
+            <ChatContainer containerId="conversation1" data={data1} />
           </div>
           <div className="chat-section">
             <p>Conversation 2</p>
-            <ChatContainer containerId="conversation2" fetchUrl={`http://localhost:3001/load-csv?type=${type}&stage=finetune&num=${num}`} />
+            <ChatContainer containerId="conversation2" data={data2} />
           </div>
         </div>
       </div>

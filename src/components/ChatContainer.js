@@ -4,12 +4,13 @@ import ChatBubble from './ChatBubble';
 
 const ChatContainer = ({ fetchUrl, containerId }) => {
   const [data, setData] = useState([]);
-
+  console.log('fetchURL', fetchUrl)
   useEffect(() => {
+
     fetch(fetchUrl)
       .then((response) => response.json())
       .then((data) => setData(data))
-      .catch((error) => console.error('Error fetching data:', error));
+      .catch((error) => console.error('Erroraaa fetching data:', error));
   }, [fetchUrl]);
 
   const renderChatBubbles = () => {

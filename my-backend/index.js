@@ -2,10 +2,14 @@ const express = require('express');
 const axios = require('axios');
 const csv = require('csv-parser');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors());
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
 
 const baseUrl = 'https://chattiedata.s3.amazonaws.com';
 
@@ -29,7 +33,7 @@ app.get('/load-csv', async (req, res) => {
     response.data.pipe(csv())
       .on('data', (data) => results.push(data))
       .on('end', () => {
-        console.log('CSV data loaded:', results); // Add logging here
+        console.log('CSV data loaded:', results);
         res.json(results);
       })
       .on('error', (error) => {
@@ -42,6 +46,12 @@ app.get('/load-csv', async (req, res) => {
   }
 });
 
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.listen(port, (err) => {
   if (err) {
     console.error('Failed to start server:', err);
@@ -52,11 +62,9 @@ app.listen(port, (err) => {
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Application specific logging, throwing an error, or other logic here
 });
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception thrown:', err);
-  // Application specific logging, throwing an error, or other logic here
-  process.exit(1); // Mandatory (as per the Node.js docs)
+  process.exit(1);
 });

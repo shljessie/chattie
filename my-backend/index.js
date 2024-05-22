@@ -3,7 +3,7 @@ const axios = require('axios');
 const csv = require('csv-parser');
 const cors = require('cors');
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 

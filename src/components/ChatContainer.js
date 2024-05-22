@@ -6,7 +6,6 @@ const ChatContainer = ({ fetchUrl, containerId }) => {
   const [data, setData] = useState([]);
   console.log('fetchURL', fetchUrl)
   useEffect(() => {
-
     fetch(fetchUrl)
       .then((response) => response.json())
       .then((data) => setData(data))

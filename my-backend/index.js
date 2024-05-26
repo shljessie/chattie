@@ -16,7 +16,6 @@ app.use(express.static(path.join(__dirname, '..', 'build')));
 
 const baseUrl = 'https://chattiedata.s3.amazonaws.com';
 
-// Ensure this code is present in index.js
 app.get('/load-csv', async (req, res) => {
   const { type, stage, num } = req.query;
 
@@ -63,13 +62,35 @@ app.post('/submit-survey', [
   const { prolific_id, uuid, data } = req.body;
 
   try {
-    const result = await pool.query(
-      `INSERT INTO survey_sessions (prolific_id, uuid, data) VALUES ($1, $2, $3) RETURNING id`, 
-      [prolific_id, uuid, data]
+    // Check if a record with the same prolific_id and uuid exists
+    const existingRecord = await pool.query(
+      `SELECT * FROM survey_sessions WHERE prolific_id = $1 AND uuid = $2`,
+      [prolific_id, uuid]
     );
-    res.status(201).send(`Survey response saved with ID: ${result.rows[0].id}`);
+
+    if (existingRecord.rows.length > 0) {
+      // Record exists, update it
+      const existingData = existingRecord.rows[0].data;
+
+      // Merge existing data with new session data
+      const updatedData = { ...existingData, ...data };
+
+      await pool.query(
+        `UPDATE survey_sessions SET data = $1 WHERE prolific_id = $2 AND uuid = $3`,
+        [updatedData, prolific_id, uuid]
+      );
+
+      res.status(200).send('Survey response updated');
+    } else {
+      // Record does not exist, insert new one
+      const result = await pool.query(
+        `INSERT INTO survey_sessions (prolific_id, uuid, data) VALUES ($1, $2, $3) RETURNING id`,
+        [prolific_id, uuid, data]
+      );
+      res.status(201).send(`Survey response saved with ID: ${result.rows[0].id}`);
+    }
   } catch (err) {
-    console.error('Error inserting data:', err);
+    console.error('Error inserting or updating data:', err);
     res.status(500).send('Error saving survey response');
   }
 });

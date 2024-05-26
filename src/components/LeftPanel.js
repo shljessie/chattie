@@ -40,6 +40,8 @@ function TextareaGroup({ question, name, label, value, onChange }) {
 
 function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFormData }) {
   const [localFormData, setLocalFormData] = useState(formData);
+  const [prolificId, setProlificId] = useState('');
+  const [uuid, setUuid] = useState('');
   const [persona, setPersona] = useState('');
 
   useEffect(() => {
@@ -66,9 +68,9 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
     updateFormData(localFormData);
     try {
       const response = await axios.post('/submit-survey', {
-        prolific_id: 'YOUR_PROLIFIC_ID', // Replace with actual ID
-        uuid: 'YOUR_UUID',               // Replace with actual UUID
-        data: { session1: localFormData } // Adjust the session number accordingly
+        prolific_id: prolificId,
+        uuid: uuid,
+        data: { [`session${section}`]: localFormData }
       });
       console.log(response.data);
     } catch (error) {
@@ -103,6 +105,14 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
         </p>
       )}
       <form>
+        <label>
+          Prolific ID:
+          <input type="text" value={prolificId} onChange={(e) => setProlificId(e.target.value)} />
+        </label>
+        <label>
+          UUID:
+          <input type="text" value={uuid} onChange={(e) => setUuid(e.target.value)} />
+        </label>
         <RadioGroup 
           question="In which conversation is Bot1 more consistent?" 
           name="consistency" 

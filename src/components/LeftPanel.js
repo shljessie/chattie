@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import ProlificIdDialog from './ProlificIdDialog'; // Import the Dialog component
 import axios from 'axios';
 
 // Function to generate a UUID
@@ -51,6 +52,7 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
   const [prolificId, setProlificId] = useState('');
   const [uuid, setUuid] = useState('');
   const [persona, setPersona] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(true);
 
   useEffect(() => {
     // Check if a UUID is already stored in localStorage
@@ -62,9 +64,14 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
     }
     setUuid(storedUuid);
 
-    // Prompt for Prolific ID when component mounts
-    const pid = window.prompt("Please enter your Prolific ID:");
-    setProlificId(pid);
+    // Check if Prolific ID is already stored in localStorage
+    const storedProlificId = localStorage.getItem('prolificId');
+    if (storedProlificId) {
+      setProlificId(storedProlificId);
+      setDialogOpen(false);
+    } else {
+      setDialogOpen(true);
+    }
 
     if (section === 1 || section === 2) {
       setPersona('You are Emily, a 30-year-old financial analyst working at Quantum Bank');
@@ -76,6 +83,14 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
   useEffect(() => {
     setLocalFormData(formData);
   }, [formData]);
+
+  const handleDialogClose = (pid) => {
+    if (pid) {
+      setProlificId(pid);
+      localStorage.setItem('prolificId', pid);
+    }
+    setDialogOpen(false);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -125,6 +140,7 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
           Please select all options before proceeding.
         </p>
       )}
+      <ProlificIdDialog open={dialogOpen} onClose={handleDialogClose} />
       <form>
         <RadioGroup 
           question="In which conversation is Bot1 more consistent?" 

@@ -1,18 +1,20 @@
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+const { Pool } = require('pg');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
-const dbPath = path.resolve(__dirname, 'survey_data.db');
-const db = new sqlite3.Database(dbPath);
-
-db.serialize(() => {
-  db.run(`CREATE TABLE IF NOT EXISTS survey_responses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+pool.query(`
+  CREATE TABLE IF NOT EXISTS survey_responses (
+    id SERIAL PRIMARY KEY,
     type TEXT,
     stage TEXT,
     num INTEGER,
     response TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )`);
-});
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+  )
+`).catch(err => console.error('Error creating table:', err));
 
-module.exports = db;
+module.exports = pool;

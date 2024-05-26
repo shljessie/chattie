@@ -4,7 +4,7 @@ const csv = require('csv-parser');
 const cors = require('cors');
 const path = require('path');
 const { body, validationResult } = require('express-validator');
-const db = require('./db'); // Import the database setup
+const pool = require('./db'); // Import the database setup
 const app = express();
 const port = process.env.PORT || 3001;
 
@@ -54,7 +54,7 @@ app.post('/submit-survey', [
   body('stage').isString(),
   body('num').isInt(),
   body('response').isString()
-], (req, res) => {
+], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -62,15 +62,13 @@ app.post('/submit-survey', [
 
   const { type, stage, num, response } = req.body;
 
-  db.run(`INSERT INTO survey_responses (type, stage, num, response) VALUES (?, ?, ?, ?)`,
-    [type, stage, num, response],
-    function (err) {
-      if (err) {
-        console.error('Error inserting data:', err);
-        return res.status(500).send('Error saving survey response');
-      }
-      res.status(201).send('Survey response saved');
-    });
+  try {
+    const result = await pool.query(`INSERT INTO survey_responses (type, stage, num, response) VALUES ($1, $2, $3, $4) RETURNING id`, [type, stage, num, response]);
+    res.status(201).send(`Survey response saved with ID: ${result.rows[0].id}`);
+  } catch (err) {
+    console.error('Error inserting data:', err);
+    res.status(500).send('Error saving survey response');
+  }
 });
 
 // The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.

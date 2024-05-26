@@ -9,7 +9,7 @@ This is the backend server for the Chattie application, which handles API reques
 Submit survey data to the `/submit-survey` endpoint using the following cURL command:
 
 ```sh
-curl -X POST https://chattie-server-4b47d3d64614.herokuapp.com/submit-survey -H "Content-Type: application/json" -d '{"type": "exampleType", "stage": "exampleStage", "num": 2, "response": "exampleResponse2"}'
+curl -X POST https://chattie-server-4b47d3d64614.herokuapp.com/submit-survey -H "Content-Type: application/json" -d '{"prolific_id": "YOUR_PROLIFIC_ID", "uuid": "YOUR_UUID", "data": {"session1": {"consistency": "option1", "naturalness": "option2", "engagement": "option1", "probingQuestion1": "option2", "probingQuestion2": "option1", "probingQuestion3": "option2"}}}'
 ```
 
 
@@ -44,6 +44,12 @@ To see the schema of the survey_responses table:
 
 ```
 SELECT * FROM survey_responses;
+```
+
+
+To log data 
+```
+curl -X POST https://chattie-server-4b47d3d64614.herokuapp.com/submit-survey -H "Content-Type: application/json" -d '{"type": "exampleType", "stage": "exampleStage", "num": 2, "response": "exampleResponse2"}'
 ```
 
 

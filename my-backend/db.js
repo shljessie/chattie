@@ -7,14 +7,19 @@ const pool = new Pool({
 });
 
 pool.query(`
-  CREATE TABLE IF NOT EXISTS survey_responses (
+  CREATE TABLE IF NOT EXISTS survey_sessions (
     id SERIAL PRIMARY KEY,
-    type TEXT,
-    stage TEXT,
-    num INTEGER,
-    response TEXT,
+    prolific_id TEXT,
+    uuid TEXT,
+    data JSONB,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
   )
-`).catch(err => console.error('Error creating table:', err));
+`, (err, res) => {
+  if (err) {
+    console.error('Error creating table:', err);
+  } else {
+    console.log('Table created successfully');
+  }
+});
 
 module.exports = pool;

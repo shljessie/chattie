@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import axios from 'axios';
+
 function RadioGroup({ question, name, label, value, onChange }) {
   return (
     <div className="radio-group">
@@ -38,8 +40,7 @@ function TextareaGroup({ question, name, label, value, onChange }) {
 
 function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFormData }) {
   const [localFormData, setLocalFormData] = useState(formData);
-
-  const [persona, setPersona] =useState('');
+  const [persona, setPersona] = useState('');
 
   useEffect(() => {
     if (section === 1 || section === 2) {
@@ -61,8 +62,18 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
     });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     updateFormData(localFormData);
+    try {
+      const response = await axios.post('/submit-survey', {
+        prolific_id: 'YOUR_PROLIFIC_ID', // Replace with actual ID
+        uuid: 'YOUR_UUID',               // Replace with actual UUID
+        data: { session1: localFormData } // Adjust the session number accordingly
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error saving survey response:', error);
+    }
     setLocalFormData({ consistency: '', naturalness: '', engagement: '', probingQuestion1: '', probingQuestion2: '', probingQuestion3: '' });
     onNext();
   };
@@ -183,8 +194,6 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
       >
         {section === 4 ? 'Complete Survey' : 'Next'}
       </button>
-
-
     </div>
   );
 }

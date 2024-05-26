@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 
+// Function to generate a UUID
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 function RadioGroup({ question, name, label, value, onChange }) {
   return (
     <div className="radio-group">
@@ -45,6 +53,19 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
   const [persona, setPersona] = useState('');
 
   useEffect(() => {
+    // Check if a UUID is already stored in localStorage
+    let storedUuid = localStorage.getItem('uuid');
+    if (!storedUuid) {
+      // Generate a new UUID and store it in localStorage
+      storedUuid = generateUUID();
+      localStorage.setItem('uuid', storedUuid);
+    }
+    setUuid(storedUuid);
+
+    // Prompt for Prolific ID when component mounts
+    const pid = window.prompt("Please enter your Prolific ID:");
+    setProlificId(pid);
+
     if (section === 1 || section === 2) {
       setPersona('You are Emily, a 30-year-old financial analyst working at Quantum Bank');
     } else {
@@ -105,14 +126,6 @@ function LeftPanel({ onNext, onPrevious, isComplete, section, formData, updateFo
         </p>
       )}
       <form>
-        <label>
-          Prolific ID:
-          <input type="text" value={prolificId} onChange={(e) => setProlificId(e.target.value)} />
-        </label>
-        <label>
-          UUID:
-          <input type="text" value={uuid} onChange={(e) => setUuid(e.target.value)} />
-        </label>
         <RadioGroup 
           question="In which conversation is Bot1 more consistent?" 
           name="consistency" 

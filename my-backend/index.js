@@ -16,6 +16,7 @@ app.use(express.static(path.join(__dirname, '..', 'build')));
 
 const baseUrl = 'https://chattiedata.s3.amazonaws.com';
 
+// Endpoint to load CSV
 app.get('/load-csv', async (req, res) => {
   const { type, stage, num } = req.query;
 
@@ -49,6 +50,7 @@ app.get('/load-csv', async (req, res) => {
   }
 });
 
+// Endpoint to submit survey data
 app.post('/submit-survey', [
   body('prolific_id').isString(),
   body('uuid').isString(),
